@@ -15,7 +15,7 @@ from torch.utils.data import DataLoader
 
 
 
-class NeuralNetwork(nn.Module):
+class AlexNet(nn.Module):
     def __init__(self, num_classes=10):
         super(AlexNet, self).__init__()
         self.features = nn.Sequential(
@@ -61,9 +61,9 @@ def read_data():
     return dataset_train, dataset_val, data_loader_train, data_loader_val
 
 def main():
-    model = NeuralNetwork() # 若有参数则传入参数
+    model = AlexNet() # 若有参数则传入参数
     current_dir = os.path.dirname(os.path.abspath(__file__))
     parent_dir = os.path.dirname(current_dir)
-    model.load_state_dict(torch.load(parent_dir + '/pth/model.pth'))
+    model.load_state_dict(torch.load(parent_dir + '/pth/model.pth',map_location='cpu'))
     return model
     
