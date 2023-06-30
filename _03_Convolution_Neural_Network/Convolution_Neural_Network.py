@@ -16,30 +16,37 @@ from torch.utils.data import DataLoader
 
 
 class AlexNet(nn.Module):
-  def __init__(self, num_classes=10):
+    def __init__(self, num_classes=10):
         super(AlexNet, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),
-            nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
         )
         self.avgpool = nn.AdaptiveAvgPool2d((6, 6))
         self.classifier = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(128 * 6 * 6, 512),
+            nn.Linear(64 * 6 * 6, 256),
             nn.ReLU(inplace=True),
-            nn.Dropout(),
-            nn.Linear(512, 256),
+            nn.Linear(256, 128),
             nn.ReLU(inplace=True),
-            nn.Linear(256, num_classes),
+            nn.Linear(128, num_classes),
         )
-  def forward(self, x):
+        
+        prune_rate = 0.5  # 剪枝比例
+        self.prune_conv1 = prune.l1_unstructured(self.features[0], 'weight', prune_rate)
+        self.prune_conv2 = prune.l1_unstructured(self.features[3], 'weight', prune_rate)
+        self.prune_conv3 = prune.l1_unstructured(self.features[6], 'weight', prune_rate)
+        self.prune_fc1 = prune.l1_unstructured(self.classifier[1], 'weight', prune_rate)
+        self.prune_fc2 = prune.l1_unstructured(self.classifier[3], 'weight', prune_rate)
+        
+    def forward(self, x):
         x = self.features(x)
         x = self.avgpool(x)
         x = torch.flatten(x, 1)
