@@ -12,7 +12,8 @@ import torch.optim as optim
 import torchvision
 
 from torch.utils.data import DataLoader
-    
+
+
 
 class NeuralNetwork(nn.Module):
      def __init__(self, num_classes=10):
