@@ -10,7 +10,8 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision
-
+import torchvision.transforms as transforms
+import torch.nn.utils.prune as prune
 from torch.utils.data import DataLoader
 
 
