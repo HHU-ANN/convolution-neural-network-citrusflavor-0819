@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader
 
 
 class NeuralNetwork(nn.Module):
-     def __init__(self, num_classes=10):
+    def __init__(self, num_classes=10):
         super(AlexNet, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
@@ -43,7 +43,6 @@ class NeuralNetwork(nn.Module):
             nn.ReLU(inplace=True),
             nn.Linear(4096, num_classes),
         )
-
     def forward(self, x):
         x = self.features(x)
         x = self.avgpool(x)
