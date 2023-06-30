@@ -16,7 +16,7 @@ from torch.utils.data import DataLoader
 
 
 class AlexNet(nn.Module):
-  def __init__(self, num_classes=10):
+ def __init__(self, num_classes=10):
         super(AlexNet, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
