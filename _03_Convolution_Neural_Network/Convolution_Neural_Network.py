@@ -38,14 +38,6 @@ class AlexNet(nn.Module):
             nn.ReLU(inplace=True),
             nn.Linear(128, num_classes),
         )
-        
-        prune_rate = 0.5  # 剪枝比例
-        self.prune_conv1 = prune.l1_unstructured(self.features[0], 'weight', prune_rate)
-        self.prune_conv2 = prune.l1_unstructured(self.features[3], 'weight', prune_rate)
-        self.prune_conv3 = prune.l1_unstructured(self.features[6], 'weight', prune_rate)
-        self.prune_fc1 = prune.l1_unstructured(self.classifier[1], 'weight', prune_rate)
-        self.prune_fc2 = prune.l1_unstructured(self.classifier[3], 'weight', prune_rate)
-        
     def forward(self, x):
         x = self.features(x)
         x = self.avgpool(x)
